@@ -106,5 +106,22 @@ const UserController = {
       });
     }
   },
+  login: async (req, res) => {
+    try {
+      const { email, senha } = req.body;
+      const user = await User.findOne({
+        where: {
+          email: email,
+          senha: senha,
+        },
+      });
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        msg: "Acione o Suporte",
+      });
+    }
+  },
 };
 module.exports = UserController;

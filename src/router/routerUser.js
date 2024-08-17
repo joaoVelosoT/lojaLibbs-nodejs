@@ -1,10 +1,12 @@
 const { Router } = require("express");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const UserController = require("../controller/UserController");
 const { log } = require("console");
+const User = require("../models/User");
 
 const router = Router();
-const SECRET = "joaov"
+const SECRET = "joaov";
+
 router.post("/", (req, res) => {
   UserController.create(req, res);
 });
@@ -13,16 +15,16 @@ router.get("/", verifyJWT, (req, res) => {
   UserController.getAll(req, res);
 });
 
-function verifyJWT(req, res, next){
-  const token = req.headers['x-access-token'];
+function verifyJWT(req, res, next) {
+  const token = req.headers["x-access-token"];
   console.log(token);
-  
-  jwt.verify(token, SECRET, (err, decoded) => {
-    if(err) return res.status(401).end()
 
-      req.userId = decoded.userId
-      next()
-  } )
+  jwt.verify(token, SECRET, (err, decoded) => {
+    if (err) return res.status(401).end();
+
+    req.userId = decoded.userId;
+    next();
+  });
 }
 
 router.get("/:id", (req, res) => {
@@ -37,32 +39,28 @@ router.delete("/:id", (req, res) => {
   UserController.delete(req, res);
 });
 
-router.post("/login", (req, res)=> {
-  try {
-    
-    const {email, senha} = req.body
-    console.log(email, senha);
-    
-    if(email === "admin" && senha === "admin"){
-      const token = jwt.sign({userId : 1}, SECRET, {expiresIn : 300});
-      console.log(token);
-      
-      return res.status(200).json({
-        token : token
-      })
-    }else {
-      return res.status(200).json({
-        msg: "senha errada"
-      })
-    }
-  } catch (error) {
-    console.log(error);
-    
-    res.status(500).json({
-      msg : "erro"
-    })
-  }
-  
-})
+router.post("/login", (req, res) => {
+  UserController.login(req, res);
+  // try {
+  //   const { email, senha } = req.body;
+  //   console.log(email, senha);
+  //   if (email === "admin" && senha === "admin") {
+  //     const token = jwt.sign({ userId: 1 }, SECRET, { expiresIn: 300 });
+  //     console.log(token);
+  //     return res.status(200).json({
+  //       token: token,
+  //     });
+  //   } else {
+  //     return res.status(200).json({
+  //       msg: "senha errada",
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(500).json({
+  //     msg: "erro",
+  //   });
+  // }
+});
 
 module.exports = router;
