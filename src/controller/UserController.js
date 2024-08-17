@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const jwt = require("jsonwebtoken");
 const UserController = {
   create: async (req, res) => {
     try {
@@ -115,7 +115,19 @@ const UserController = {
           senha: senha,
         },
       });
-      console.log(user);
+
+      if (!user) {
+        return res.status(200).json({
+          msg: "Erro, Conta não encontrada",
+        });
+      }
+      const token = jwt.sign({ userId: user.id }, "joao12", { expiresIn: 600 });
+      console.log("teste", jwt.decode(token));
+
+      return res.status(200).json({
+        msg: "Login feito com sucesso !",
+        token: token,
+      });
     } catch (error) {
       console.log(error);
       res.status(500).json({
@@ -123,5 +135,26 @@ const UserController = {
       });
     }
   },
+  comprar: async (req, res) => {
+    try {
+      return res.status(200).json({
+        msg: "Compra realizada com sucesso !",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 module.exports = UserController;
+
+function verifyJWT(req, res, next) {
+  const token = req.headers["x-access-token"];
+  console.log(token);
+
+  jwt.verify(token, "joao12", (err, decoded) => {
+    if (err) return res.status(401).end();
+
+    req.userId = decoded.userId;
+    next();
+  });
+}

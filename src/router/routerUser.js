@@ -11,21 +11,9 @@ router.post("/", (req, res) => {
   UserController.create(req, res);
 });
 
-router.get("/", verifyJWT, (req, res) => {
+router.get("/", (req, res) => {
   UserController.getAll(req, res);
 });
-
-function verifyJWT(req, res, next) {
-  const token = req.headers["x-access-token"];
-  console.log(token);
-
-  jwt.verify(token, SECRET, (err, decoded) => {
-    if (err) return res.status(401).end();
-
-    req.userId = decoded.userId;
-    next();
-  });
-}
 
 router.get("/:id", (req, res) => {
   UserController.getOne(req, res);
@@ -63,4 +51,22 @@ router.post("/login", (req, res) => {
   // }
 });
 
+router.post("/comprar", verifyJWT, (req, res) => {
+  UserController.comprar(req, res);
+});
+
 module.exports = router;
+
+function verifyJWT(req, res, next) {
+  console.log(req.headers.authorization);
+
+  const token = req.headers.authorization;
+  console.log("token", token);
+
+  jwt.verify(token, "joao12", (err, decoded) => {
+    if (err) return res.status(401).end();
+
+    req.userId = decoded.userId;
+    next();
+  });
+}
