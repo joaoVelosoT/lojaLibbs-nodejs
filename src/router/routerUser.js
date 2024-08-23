@@ -1,12 +1,17 @@
 const { Router } = require("express");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const UserController = require("../controller/UserController");
 const { log } = require("console");
 const { validateUser, validateUserId } = require("../middleware/ValidateUser");
 
 const router = Router();
+<<<<<<< HEAD
 const SECRET = "joaov"
 router.post("/", validateUser, (req, res) => {
+=======
+
+router.post("/", (req, res) => {
+>>>>>>> 48ea29f2cdd7532be803a8aadaad96dde552bb08
   UserController.create(req, res);
 });
 
@@ -14,6 +19,7 @@ router.get("/", (req, res) => {
   UserController.getAll(req, res);
 });
 
+<<<<<<< HEAD
 // function verifyJWT(req, res, next){
 //   const token = req.headers['x-access-token'];
 //   console.log(token);
@@ -29,6 +35,9 @@ router.get("/", (req, res) => {
 // }
 
 router.get("/:id", validateUserId, (req, res) => {
+=======
+router.get("/:id", (req, res) => {
+>>>>>>> 48ea29f2cdd7532be803a8aadaad96dde552bb08
   UserController.getOne(req, res);
 });
 
@@ -40,6 +49,7 @@ router.delete("/:id",validateUserId, (req, res) => {
   UserController.delete(req, res);
 });
 
+<<<<<<< HEAD
 // router.post("/login", (req, res)=> {
 //   try {
     
@@ -69,3 +79,6 @@ router.delete("/:id",validateUserId, (req, res) => {
 // })
 
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> 48ea29f2cdd7532be803a8aadaad96dde552bb08
