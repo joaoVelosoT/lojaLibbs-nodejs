@@ -4,10 +4,11 @@ const routerUser = require("./router/routerUser");
 const routerProduct = require("./router/routerProduct");
 const sequelize = require("./config/config");
 const jwt = "jsonwebtoken";
+const router = require("./router/router")
 
 app.use(express.json());
-app.use("/api/user", routerUser);
-app.use("/api/product", routerProduct);
+app.use("/api", router);
+
 
 app.get("/healthcheck", (req, res) => {
   return res.status(200).json({

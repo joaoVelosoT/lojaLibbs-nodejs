@@ -3,11 +3,13 @@ const jwt = require("jsonwebtoken");
 const UserController = require("../controller/UserController");
 const { log } = require("console");
 const User = require("../models/User");
+const { validateUser} = require("../middleware/ValidateUser");
+const validateId = require("../middleware/ValidateId");
 
 const router = Router();
 const SECRET = "joaov";
 
-router.post("/", (req, res) => {
+router.post("/", validateUser, (req, res) => {
   UserController.create(req, res);
 });
 
@@ -15,15 +17,15 @@ router.get("/", (req, res) => {
   UserController.getAll(req, res);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", validateId, (req, res) => {
   UserController.getOne(req, res);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", validateId, validateUser, (req, res) => {
   UserController.update(req, res);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", validateId, (req, res) => {
   UserController.delete(req, res);
 });
 
