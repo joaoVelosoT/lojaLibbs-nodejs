@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
-const routerUser = require("./router/routerUser");
-const routerProduct = require("./router/routerProduct");
-const routerCliente = require("./router/routerCliente");
+
 const sequelize = require("./config/config");
 const router = require("./router/router");
+
+// npm i jsonwebtoken dotenv bcryptjs
 const jwt = "jsonwebtoken";
 
 app.use(express.json());
@@ -26,7 +27,7 @@ sequelize
     await sequelize.sync();
   })
   .then(async () => {
-    app.listen(8080, () => {
+    app.listen(process.env.PORT == null ? 8080 : process.env.PORT, () => {
       console.log("servidor rodando");
     });
   })

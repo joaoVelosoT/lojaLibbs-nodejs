@@ -1,11 +1,49 @@
 const User = require("../models/User");
-
+const bcrypt = require("bcryptjs");
 const UserController = {
+
+  login : async(req,res) => {
+    try {
+        const {email, senha} = req.body;
+
+        const user = await User.findOne({ where : {email}})
+
+        if (!user){
+          return res.status(400).json({
+            msg : 'Email ou senha incorretos'
+          })
+        }
+
+        const isValida = await bcrypt.compare(senha, user.senha)
+
+        if(!isValida){
+          return res.status(400).json({
+            msg : 'Email ou senha incorretos'
+          })
+        }
+
+        const token = jwt.sign({
+          email : user.email,
+          name : user.nome
+          }, process.env.SECRET, { expireIn : "1h"});
+
+          return res.status(200).json({
+            msg : 'Login realizado',
+            token
+          })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          msg: "Acione o Suporte",
+        });
+    }
+  },
   create: async (req, res) => {
     try {
       const { nome, email, senha } = req.body;
+      const hashSenha = await bcrypt.hash(senha, 10);
 
-      const userCriado = await User.create({ nome, senha, email });
+      const userCriado = await User.create({ nome, senha: hashSenha, email });
 
       res.status(200).json({
         msg: "User Criado com Sucesso !!",
