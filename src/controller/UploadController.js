@@ -33,7 +33,7 @@ const UploadController = {
                     file.endsWith(".jpg")
             )
             res.send(images);
-        });
+        }); // teste
     },
 
     getImage : (req,res) => {
