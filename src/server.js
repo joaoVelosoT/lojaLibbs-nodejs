@@ -1,7 +1,12 @@
 require('dotenv').config();
+
+// multer - é um middleware usado para manipular arquivos multipart/form-data, usado para fazer upload de arquivos
+// sharp - usado para manipular a imagem  
 const express = require("express");
 const app = express();
+const cors = require('cors')
 
+app.use(cors())
 const sequelize = require("./config/config");
 const router = require("./router/router");
 
